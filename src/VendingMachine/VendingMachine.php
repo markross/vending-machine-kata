@@ -4,13 +4,21 @@ namespace VendingMachine;
 
 class VendingMachine
 {
-    public function receiveCoin()
+    private int $valueInserted = 0;
+
+    public function receiveCoin(Coin $coin) : bool
     {
+        if ($coin->getWeight() === 2) {
+            $this->valueInserted = 10;
+        } else {
+            $this->valueInserted = 5;
+        }
+
         return true;
     }
 
-    public function getTotalPaid()
+    public function getTotalPaid() : int
     {
-        return 5;
+        return $this->valueInserted;
     }
 }

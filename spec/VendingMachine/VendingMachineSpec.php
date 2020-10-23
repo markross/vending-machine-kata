@@ -7,9 +7,9 @@ use VendingMachine\Coin;
 
 class VendingMachineSpec extends ObjectBehavior
 {
-    function it_accepts_coins()
+    function it_accepts_coins(Coin $coin)
     {
-        $this->receiveCoin()->shouldBe(true);
+        $this->receiveCoin($coin)->shouldBe(true);
     }
 
     function it_detects_a_nickle(Coin $coin)
