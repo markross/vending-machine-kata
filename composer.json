@@ -1,0 +1,25 @@
+{
+    "name": "markross/vending-machine",
+    "description": "Vending Machine Kata",
+    "require-dev": {
+        "phpspec/phpspec": "^6.2"
+    },
+    "authors": [
+        {
+            "name": "Mark Ross",
+            "email": "mark@mross.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "VendingMachine\\": "src/VendingMachine",
+            "spec\\": "spec"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        },
+        "require": {}
+    }
+}
