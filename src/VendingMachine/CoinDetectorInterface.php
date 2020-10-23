@@ -6,7 +6,5 @@ namespace VendingMachine;
 
 interface CoinDetectorInterface
 {
-
-
-    public function detect($argument1);
+    public function detect(Coin $coin) : int;
 }
