@@ -17,7 +17,7 @@ class VendingMachine
 
     public function receiveCoin(Coin $coin) : bool
     {
-        $value = $this->coinDetector->detect($coin);
+        $value = $this->coinDetector->getValue($coin);
         $this->valueInserted += $value;
 
         return true;
