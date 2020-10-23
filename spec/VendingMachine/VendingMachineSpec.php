@@ -39,4 +39,13 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getTotalPaid()->shouldBe(0);
     }
 
+    function it_received_multiple_coins(Coin $coin1, Coin $coin2)
+    {
+        $coin1->getWeight()->willReturn(2);
+        $coin2->getWeight()->willReturn(3);
+        $this->receiveCoin($coin1);
+        $this->receiveCoin($coin2);
+        $this->getTotalPaid()->shouldBe(35);
+    }
+
 }

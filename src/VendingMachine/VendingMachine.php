@@ -13,11 +13,11 @@ class VendingMachine
         }
 
         if ($coin->getWeight() === 2) {
-            $this->valueInserted = 10;
+            $this->valueInserted = $this->valueInserted + 10;
         } elseif ($coin->getWeight() === 3) {
-            $this->valueInserted = 25;
+            $this->valueInserted = $this->valueInserted + 25;
         } else {
-            $this->valueInserted = 5;
+            $this->valueInserted = $this->valueInserted + 5;
         }
 
         return true;
