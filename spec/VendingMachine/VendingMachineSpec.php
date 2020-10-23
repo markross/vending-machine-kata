@@ -25,4 +25,11 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getTotalPaid()->shouldBe(10);
     }
 
+    function it_detects_a_quarter(Coin $coin)
+    {
+        $coin->getWeight()->willReturn(3);
+        $this->receiveCoin($coin);
+        $this->getTotalPaid()->shouldBe(25);
+    }
+
 }
