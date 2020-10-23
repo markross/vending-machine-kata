@@ -4,6 +4,7 @@ namespace spec\VendingMachine;
 
 use PhpSpec\ObjectBehavior;
 use VendingMachine\VendingMachine;
+use VendingMachine\VendingMachine\Coin;
 
 class VendingMachineSpec extends ObjectBehavior
 {
