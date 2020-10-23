@@ -4,7 +4,7 @@
 namespace spec\VendingMachine;
 
 
-class Coin
+interface Coin
 {
 
 }
