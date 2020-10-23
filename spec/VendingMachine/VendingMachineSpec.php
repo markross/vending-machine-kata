@@ -18,5 +18,11 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getTotalPaid()->shouldBe(5);
     }
 
+    function it_detects_a_dime(Coin $coin)
+    {
+        $coin->getWeight()->willReturn(2);
+        $this->receiveCoin($coin);
+        $this->getTotalPaid()->shouldBe(10);
+    }
 
 }
