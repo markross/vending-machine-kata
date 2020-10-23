@@ -18,14 +18,20 @@ class CoinDetector implements CoinDetectorInterface
             return 0;
         }
 
-        if ($coin->getWeight() === self::NICKLE_WEIGHT) {
-            return self::NICKLE_VALUE;
-        } elseif ($coin->getWeight() === self::DIME_WEIGHT) {
-            return self::DIME_VALUE;
-        } elseif ($coin->getWeight() === self::QUARTER_WEIGHT) {
-            return self::QUARTER_VALUE;
-        }
+        return $this->getValueFromWeight($coin->getWeight());
     }
+
+    private function getValueFromWeight(int $weight) : int
+    {
+        $weightToValues = [
+            self::NICKLE_WEIGHT => self::NICKLE_VALUE,
+            self::DIME_WEIGHT => self::DIME_VALUE,
+            self::QUARTER_WEIGHT => self::QUARTER_VALUE,
+        ];
+
+        return $weightToValues[$weight];
+    }
+
 
     private function isValidCoin(Coin $coin) : bool
     {
