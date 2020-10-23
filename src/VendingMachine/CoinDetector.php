@@ -10,6 +10,10 @@ class CoinDetector implements CoinDetectorInterface
 
     public function getValue(Coin $coin): int
     {
+        if (!$this->isValidCoin($coin)) {
+            return 0;
+        }
+
         if ($coin->getWeight() === self::NICKLE_WEIGHT) {
             return 5;
         } elseif ($coin->getWeight() === self::DIME_WEIGHT) {
@@ -17,7 +21,11 @@ class CoinDetector implements CoinDetectorInterface
         } elseif ($coin->getWeight() === self::QUARTER_WEIGHT) {
             return 25;
         }
+    }
 
-        return 0;
+    private function isValidCoin(Coin $coin) : bool
+    {
+        $validWeights = [self::NICKLE_WEIGHT, self::DIME_WEIGHT, self::QUARTER_WEIGHT];
+        return in_array($coin->getWeight(), $validWeights);
     }
 }
