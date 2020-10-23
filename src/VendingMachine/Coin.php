@@ -1,7 +1,7 @@
 <?php
 
 
-namespace VendingMachine\VendingMachine;
+namespace VendingMachine;
 
 
 interface Coin
