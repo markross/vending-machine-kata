@@ -32,4 +32,11 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getTotalPaid()->shouldBe(25);
     }
 
+    function it_rejects_pennies(Coin $coin)
+    {
+        $coin->getWeight()->willReturn(1.5);
+        $this->receiveCoin($coin);
+        $this->getTotalPaid()->shouldBe(0);
+    }
+
 }

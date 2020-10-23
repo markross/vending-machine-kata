@@ -8,10 +8,13 @@ class VendingMachine
 
     public function receiveCoin(Coin $coin) : bool
     {
+        if ($coin->getWeight() === 1.5) {
+            return false;
+        }
+
         if ($coin->getWeight() === 2) {
             $this->valueInserted = 10;
-        }
-        elseif ($coin->getWeight() === 3) {
+        } elseif ($coin->getWeight() === 3) {
             $this->valueInserted = 25;
         } else {
             $this->valueInserted = 5;
