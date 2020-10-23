@@ -8,4 +8,9 @@ class VendingMachine
     {
         return true;
     }
+
+    public function getTotalPaid()
+    {
+        return 5;
+    }
 }

@@ -12,4 +12,11 @@ class VendingMachineSpec extends ObjectBehavior
         $this->receiveCoin()->shouldBe(true);
     }
 
+    function it_detects_a_nickle(Coin $coin)
+    {
+        $this->receiveCoin($coin);
+        $this->getTotalPaid()->shouldBe(5);
+    }
+
+
 }
