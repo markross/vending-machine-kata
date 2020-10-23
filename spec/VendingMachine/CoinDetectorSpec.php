@@ -15,10 +15,16 @@ class CoinDetectorSpec extends ObjectBehavior
         $this->getValue($coin)->shouldBe(0);
     }
 
-    function it_detects_nicles(Coin $coin)
+    function it_detects_nickles(Coin $coin)
     {
         $coin->getWeight()->willReturn(2);
         $this->getValue($coin)->shouldBe(5);
+    }
+
+    function it_detects_dimes(Coin $coin)
+    {
+        $coin->getWeight()->willReturn(3);
+        $this->getValue($coin)->shouldBe(10);
     }
 
 }
