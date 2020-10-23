@@ -27,4 +27,10 @@ class CoinDetectorSpec extends ObjectBehavior
         $this->getValue($coin)->shouldBe(10);
     }
 
+    function it_detects_quarters(Coin $coin)
+    {
+        $coin->getWeight()->willReturn(4);
+        $this->getValue($coin)->shouldBe(25);
+    }
+
 }
