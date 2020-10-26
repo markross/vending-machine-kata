@@ -9,7 +9,7 @@ class VendingMachine
      * @var CoinDetectorInterface
      */
     private CoinDetectorInterface $coinDetector;
-    private int $amountRequired;
+    private int $paymentRequired;
 
     public function __construct(CoinDetectorInterface $coinCounter)
     {
@@ -37,16 +37,16 @@ class VendingMachine
     public function selectProduct($product) : void
     {
         if ($product === 'cola') {
-            $this->amountRequired = 100;
+            $this->paymentRequired = 100;
         } elseif ($product === 'chips') {
-            $this->amountRequired = 50;
+            $this->paymentRequired = 50;
         } elseif ($product === 'candy') {
-            $this->amountRequired = 65;
+            $this->paymentRequired = 65;
         }
     }
 
     public function getPaymentRequired() : int
     {
-        return $this->amountRequired;
+        return $this->paymentRequired;
     }
 }
