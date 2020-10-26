@@ -11,8 +11,17 @@ class InventorySpec extends ObjectBehavior
     {
         $this->addProduct([
            "sku"    => 'cola',
-           "price"  => '100',
+           "price"  => 100,
+        ]);
+    }
+
+    function it_can_get_the_price_of_a_sku()
+    {
+        $this->addProduct([
+            "sku"    => 'cola',
+            "price"  => 100,
         ]);
 
+        $this->getPrice('cola')->shouldBe(100);
     }
 }

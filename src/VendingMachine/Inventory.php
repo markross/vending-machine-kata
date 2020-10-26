@@ -12,4 +12,9 @@ class Inventory
         $this->products[$productDetails["sku"]] = $productDetails["price"];
     }
 
+    public function getPrice($sku)
+    {
+        return $this->products[$sku];
+    }
+
 }
