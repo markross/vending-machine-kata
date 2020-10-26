@@ -40,6 +40,8 @@ class VendingMachine
             $this->amountRequired = 100;
         } elseif ($product === 'chips') {
             $this->amountRequired = 50;
+        } elseif ($product === 'candy') {
+            $this->amountRequired = 65;
         }
     }
 

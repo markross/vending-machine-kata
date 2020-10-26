@@ -75,6 +75,10 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getPaymentRequired()->shouldBe(50);
     }
 
-
+    function it_can_select_the_candy_product()
+    {
+        $this->selectProduct('candy');
+        $this->getPaymentRequired()->shouldBe(65);
+    }
 
 }
