@@ -72,7 +72,9 @@ class VendingMachineSpec extends ObjectBehavior
     function it_can_select_the_chips_product()
     {
         $this->selectProduct('chips');
-        $this->getPaymentRequired()->shouldBe(65);
+        $this->getPaymentRequired()->shouldBe(50);
     }
+
+
 
 }
