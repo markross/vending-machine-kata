@@ -56,5 +56,8 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getTotalPaid()->shouldBe(CoinDetector::DIME_VALUE + CoinDetector::QUARTER_VALUE);
     }
 
-
+    function it_displays_insert_coin_message_when_no_coins_inserted()
+    {
+        $this->getMessage()->shouldBe("INSERT COIN");
+    }
 }

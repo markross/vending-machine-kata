@@ -27,4 +27,9 @@ class VendingMachine
     {
         return $this->valueInserted;
     }
+
+    public function getMessage()
+    {
+        return "INSERT COIN";
+    }
 }
