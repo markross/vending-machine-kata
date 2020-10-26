@@ -9,6 +9,8 @@ use VendingMachine\CoinDetectorInterface;
 
 class VendingMachineSpec extends ObjectBehavior
 {
+    const INSERT_COIN_MSG = "INSERT COIN";
+
     function let(CoinDetectorInterface $coinDetector) {
         $this->beConstructedWith($coinDetector);
     }
@@ -58,6 +60,6 @@ class VendingMachineSpec extends ObjectBehavior
 
     function it_displays_insert_coin_message_when_no_coins_inserted()
     {
-        $this->getMessage()->shouldBe("INSERT COIN");
+        $this->getMessage()->shouldBe(self::INSERT_COIN_MSG);
     }
 }
