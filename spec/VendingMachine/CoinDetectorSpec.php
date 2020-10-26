@@ -17,20 +17,20 @@ class CoinDetectorSpec extends ObjectBehavior
 
     function it_detects_nickles(Coin $coin)
     {
-        $coin->getWeight()->willReturn(2);
-        $this->getValue($coin)->shouldBe(5);
+        $coin->getWeight()->willReturn(CoinDetector::NICKLE_WEIGHT);
+        $this->getValue($coin)->shouldBe(CoinDetector::NICKLE_VALUE);
     }
 
     function it_detects_dimes(Coin $coin)
     {
-        $coin->getWeight()->willReturn(3);
-        $this->getValue($coin)->shouldBe(10);
+        $coin->getWeight()->willReturn(CoinDetector::DIME_WEIGHT);
+        $this->getValue($coin)->shouldBe(CoinDetector::DIME_VALUE);
     }
 
     function it_detects_quarters(Coin $coin)
     {
-        $coin->getWeight()->willReturn(4);
-        $this->getValue($coin)->shouldBe(25);
+        $coin->getWeight()->willReturn(CoinDetector::QUARTER_WEIGHT);
+        $this->getValue($coin)->shouldBe(CoinDetector::QUARTER_VALUE);
     }
 
 }

@@ -4,6 +4,7 @@ namespace spec\VendingMachine;
 
 use PhpSpec\ObjectBehavior;
 use VendingMachine\Coin;
+use VendingMachine\CoinDetector;
 use VendingMachine\CoinDetectorInterface;
 
 class VendingMachineSpec extends ObjectBehavior
@@ -20,23 +21,23 @@ class VendingMachineSpec extends ObjectBehavior
 
     function it_detects_a_nickle(Coin $coin, CoinDetectorInterface $coinDetector)
     {
-        $coinDetector->getValue($coin)->willReturn(5);
+        $coinDetector->getValue($coin)->willReturn(CoinDetector::NICKLE_VALUE);
         $this->receiveCoin($coin);
-        $this->getTotalPaid()->shouldBe(5);
+        $this->getTotalPaid()->shouldBe(CoinDetector::NICKLE_VALUE);
     }
 
     function it_detects_a_dime(Coin $coin, CoinDetectorInterface $coinDetector)
     {
-        $coinDetector->getValue($coin)->willReturn(10);
+        $coinDetector->getValue($coin)->willReturn(CoinDetector::DIME_VALUE);
         $this->receiveCoin($coin);
-        $this->getTotalPaid()->shouldBe(10);
+        $this->getTotalPaid()->shouldBe(CoinDetector::DIME_VALUE);
     }
 
     function it_detects_a_quarter(Coin $coin, CoinDetectorInterface $coinDetector)
     {
-        $coinDetector->getValue($coin)->willReturn(25);
+        $coinDetector->getValue($coin)->willReturn(CoinDetector::QUARTER_VALUE);
         $this->receiveCoin($coin);
-        $this->getTotalPaid()->shouldBe(25);
+        $this->getTotalPaid()->shouldBe(CoinDetector::QUARTER_VALUE);
     }
 
     function it_rejects_pennies(Coin $coin, CoinDetectorInterface $coinDetector)
@@ -48,11 +49,12 @@ class VendingMachineSpec extends ObjectBehavior
 
     function it_receives_multiple_coins(Coin $coin1, Coin $coin2, CoinDetectorInterface $coinDetector)
     {
-        $coinDetector->getValue($coin1)->willReturn(10);
-        $coinDetector->getValue($coin2)->willReturn(25);
+        $coinDetector->getValue($coin1)->willReturn(CoinDetector::DIME_VALUE);
+        $coinDetector->getValue($coin2)->willReturn(CoinDetector::QUARTER_VALUE);
         $this->receiveCoin($coin1);
         $this->receiveCoin($coin2);
-        $this->getTotalPaid()->shouldBe(35);
+        $this->getTotalPaid()->shouldBe(CoinDetector::DIME_VALUE + CoinDetector::QUARTER_VALUE);
     }
+
 
 }
