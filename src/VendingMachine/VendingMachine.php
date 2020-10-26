@@ -4,6 +4,7 @@ namespace VendingMachine;
 
 class VendingMachine
 {
+    const INSERT_COIN_MSG = "INSERT COIN";
     private int $valueInserted = 0;
     /**
      * @var CoinDetectorInterface
@@ -41,11 +42,13 @@ class VendingMachine
 
     public function getMessage()
     {
-        if ($this->valueInserted === 0) {
-            return "INSERT COIN";
-        } else {
-            return '$ 0.25';
+        $message = self::INSERT_COIN_MSG;
+
+        if ($this->valueInserted > 0) {
+            $message =  "$ " . number_format($this->valueInserted / 100, 2);
         }
+
+        return $message;
     }
 
     public function selectProduct($product) : void
