@@ -9,6 +9,7 @@ class VendingMachine
      * @var CoinDetectorInterface
      */
     private CoinDetectorInterface $coinDetector;
+    private int $amountRequired;
 
     public function __construct(CoinDetectorInterface $coinCounter)
     {
@@ -31,5 +32,15 @@ class VendingMachine
     public function getMessage()
     {
         return "INSERT COIN";
+    }
+
+    public function selectProduct($product) : void
+    {
+        $this->amountRequired = 100;
+    }
+
+    public function getPaymentRequired() : int
+    {
+        return $this->amountRequired;
     }
 }
