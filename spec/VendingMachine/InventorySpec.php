@@ -7,8 +7,12 @@ use VendingMachine\Inventory;
 
 class InventorySpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    function it_can_add_products()
     {
-        $this->shouldHaveType(Inventory::class);
+        $this->addProduct([
+           "sku"    => 'cola',
+           "price"  => '100',
+        ]);
+
     }
 }
