@@ -36,7 +36,11 @@ class VendingMachine
 
     public function selectProduct($product) : void
     {
-        $this->amountRequired = 100;
+        if ($product === 'cola') {
+            $this->amountRequired = 100;
+        } elseif ($product === 'chips') {
+            $this->amountRequired = 65;
+        }
     }
 
     public function getPaymentRequired() : int

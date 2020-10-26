@@ -63,10 +63,16 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getMessage()->shouldBe(self::INSERT_COIN_MSG);
     }
 
-    function it_can_select_a_product()
+    function it_sets_the_payment_required_when_selecting_a_product()
     {
         $this->selectProduct('cola');
         $this->getPaymentRequired()->shouldBe(100);
+    }
+
+    function it_can_select_the_chips_product()
+    {
+        $this->selectProduct('chips');
+        $this->getPaymentRequired()->shouldBe(65);
     }
 
 }
