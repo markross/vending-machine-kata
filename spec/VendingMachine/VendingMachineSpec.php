@@ -3,16 +3,18 @@
 namespace spec\VendingMachine;
 
 use PhpSpec\ObjectBehavior;
+use Prophecy\Argument;
 use VendingMachine\Coin;
 use VendingMachine\CoinDetector;
 use VendingMachine\CoinDetectorInterface;
+use VendingMachine\Inventory;
 
 class VendingMachineSpec extends ObjectBehavior
 {
     const INSERT_COIN_MSG = "INSERT COIN";
 
-    function let(CoinDetectorInterface $coinDetector) {
-        $this->beConstructedWith($coinDetector);
+    function let(CoinDetectorInterface $coinDetector, Inventory $inventory) {
+        $this->beConstructedWith($coinDetector, $inventory);
     }
 
     function it_accepts_coins(Coin $coin, CoinDetectorInterface $coinDetector)
@@ -63,22 +65,29 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getMessage()->shouldBe(self::INSERT_COIN_MSG);
     }
 
-    function it_sets_the_payment_required_when_selecting_a_product()
+    function it_sets_the_payment_required_when_selecting_a_product(Inventory $inventory)
     {
+        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->getPrice('cola')->willReturn(100);
         $this->selectProduct('cola');
         $this->getPaymentRequired()->shouldBe(100);
     }
 
-    function it_can_select_the_chips_product()
+    function it_can_select_the_chips_product(Inventory $inventory)
     {
+        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->getPrice('chips')->willReturn(50);
         $this->selectProduct('chips');
         $this->getPaymentRequired()->shouldBe(50);
     }
 
-    function it_can_select_the_candy_product()
+    function it_can_select_the_candy_product(Inventory $inventory)
     {
+        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->getPrice('candy')->willReturn(65);
         $this->selectProduct('candy');
         $this->getPaymentRequired()->shouldBe(65);
     }
+
 
 }
