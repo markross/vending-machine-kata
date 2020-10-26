@@ -12,7 +12,7 @@ class VendingMachine
     /**
      * @var int $paymentRequired
      */
-    private int $paymentRequired;
+    private int $paymentRequired = 0;
     /**
      * @var Inventory
      */
@@ -41,7 +41,11 @@ class VendingMachine
 
     public function getMessage()
     {
-        return "INSERT COIN";
+        if ($this->valueInserted === 0) {
+            return "INSERT COIN";
+        } else {
+            return '$ 0.25';
+        }
     }
 
     public function selectProduct($product) : void

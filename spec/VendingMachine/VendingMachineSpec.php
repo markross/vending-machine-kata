@@ -89,5 +89,12 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getPaymentRequired()->shouldBe(65);
     }
 
+    function it_shows_the_current_amount_inserted(Coin $coin, CoinDetectorInterface $coinDetector)
+    {
+        $coin->getWeight()->willReturn(CoinDetector::QUARTER_VALUE);
+        $coinDetector->getValue($coin)->willReturn(25);
+        $this->receiveCoin($coin);
+        $this->getMessage()->shouldBeLike('$ 0.25');
+    }
 
 }
