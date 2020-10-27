@@ -155,4 +155,15 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getMessage()->shouldBe(VendingMachine::OUT_OF_STOCK_MSG);
         $this->getMessage()->shouldBe('$ 0.50');
     }
+
+    function it_displays_insert_coin_message_after_selecting_out_of_stock_product(CoinDetectorInterface $coinDetector, Inventory $inventory)
+    {
+        $inventory->checkStock('cola')->willReturn(0);
+        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->getPrice('cola')->willReturn(50);
+        $this->selectProduct('cola');
+        $this->getMessage()->shouldBe(VendingMachine::OUT_OF_STOCK_MSG);
+        $this->getMessage()->shouldBe(VendingMachine::INSERT_COIN_MSG);
+    }
+
 }

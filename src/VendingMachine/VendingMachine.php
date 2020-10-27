@@ -37,6 +37,10 @@ class VendingMachine
         $value = $this->coinDetector->getValue($coin);
         $this->valueInserted += $value;
 
+        if ($this->valueInserted > 0 && $this->valueInserted >= $this->paymentRequired && $this->paymentRequired > 0) {
+            $this->dispenseProduct();
+        }
+
         return true;
     }
 
@@ -55,10 +59,6 @@ class VendingMachine
 
         if ($this->valueInserted > 0 && $this->valueInserted > $this->paymentRequired) {
             $message =  $this->formatCurrency($this->valueInserted);
-        }
-
-        if ($this->valueInserted > 0 && $this->valueInserted >= $this->paymentRequired && $this->paymentRequired > 0) {
-            $message = self::DISPENSED_MSG;
         }
 
         if ($this->message !== '') {
@@ -118,6 +118,11 @@ class VendingMachine
         $this->paymentRequired = 0;
     }
 
+    public function getChange()
+    {
+
+    }
+
     /**
      * @param int $value
      * @return string
@@ -126,5 +131,13 @@ class VendingMachine
     {
         return '$ ' . number_format($value / 100, 2);
     }
+
+    private function dispenseProduct()
+    {
+        $this->message = self::DISPENSED_MSG;
+        $this->valueInserted = 0;
+        $this->paymentRequired = 0;
+    }
+
 
 }
