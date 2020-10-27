@@ -100,6 +100,12 @@ class VendingMachine
         );
     }
 
+    public function returnCoins()
+    {
+        $this->valueInserted = 0;
+        $this->paymentRequired = 0;
+    }
+
     /**
      * @param int $value
      * @return string
@@ -108,4 +114,5 @@ class VendingMachine
     {
         return '$ ' . number_format($value / 100, 2);
     }
+
 }

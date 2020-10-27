@@ -8,6 +8,7 @@ use VendingMachine\Coin;
 use VendingMachine\CoinDetector;
 use VendingMachine\CoinDetectorInterface;
 use VendingMachine\Inventory;
+use VendingMachine\VendingMachine;
 
 class VendingMachineSpec extends ObjectBehavior
 {
@@ -125,5 +126,15 @@ class VendingMachineSpec extends ObjectBehavior
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
         $this->getMessage()->shouldBe('THANK YOU');
+    }
+
+    function it_resets_when_returning_coins(Coin $coin, CoinDetectorInterface $coinDetector)
+    {
+        $coinDetector->getValue($coin)->willReturn(25);
+        $this->receiveCoin($coin);
+        $this->receiveCoin($coin);
+        $this->returnCoins();
+        $this->getMessage()->shouldBe(VendingMachine::INSERT_COIN_MSG);
+        $this->getTotalPaid()->shouldBe(0);
     }
 }
