@@ -96,10 +96,9 @@ class VendingMachineSpec extends ObjectBehavior
         $this->selectProduct('candy');
         $this->getMessage()->shouldBe("PRICE $ 0.65");
     }
-    
+
     function it_shows_the_current_amount_inserted(Coin $coin, CoinDetectorInterface $coinDetector)
     {
-        $coin->getWeight()->willReturn(CoinDetector::QUARTER_VALUE);
         $coinDetector->getValue($coin)->willReturn(25);
         $this->receiveCoin($coin);
         $this->getMessage()->shouldBeLike('$ 0.25');
@@ -107,10 +106,24 @@ class VendingMachineSpec extends ObjectBehavior
 
     function it_shows_the_current_amount_when_multiple_coins_inserted(Coin $coin, CoinDetectorInterface $coinDetector)
     {
-        $coin->getWeight()->willReturn(CoinDetector::QUARTER_VALUE);
         $coinDetector->getValue($coin)->willReturn(25);
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
         $this->getMessage()->shouldBeLike('$ 0.50');
+    }
+
+    function it_dispenses_the_product_when_the_right_money_is_inserted(
+        Coin $coin, CoinDetectorInterface
+        $coinDetector,
+        Inventory $inventory
+    )
+    {
+        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $coinDetector->getValue($coin)->willReturn(CoinDetector::QUARTER_VALUE);
+        $inventory->getPrice('cola')->willReturn(50);
+        $this->selectProduct('cola');
+        $this->receiveCoin($coin);
+        $this->receiveCoin($coin);
+        $this->getMessage()->shouldBe('THANK YOU');
     }
 }

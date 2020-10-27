@@ -5,13 +5,15 @@ namespace VendingMachine;
 class VendingMachine
 {
     const INSERT_COIN_MSG = "INSERT COIN";
+    const DISPENSED_MSG = 'THANK YOU';
+
     private int $valueInserted = 0;
     /**
      * @var CoinDetectorInterface
      */
     private CoinDetectorInterface $coinDetector;
     /**
-     * @var int $paymentRequired
+     * @var int $paymentRequired = 0;
      */
     private int $paymentRequired = 0;
     /**
@@ -48,8 +50,12 @@ class VendingMachine
             $message = "PRICE " . $this->formatCurrency($this->paymentRequired);
         }
 
-        if ($this->valueInserted > 0) {
+        if ($this->valueInserted > 0 && $this->valueInserted > $this->paymentRequired) {
             $message =  $this->formatCurrency($this->valueInserted);
+        }
+
+        if ($this->valueInserted > 0 && $this->valueInserted >= $this->paymentRequired && $this->paymentRequired > 0) {
+            $message = self::DISPENSED_MSG;
         }
 
         return $message;
