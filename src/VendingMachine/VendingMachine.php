@@ -45,11 +45,11 @@ class VendingMachine
         $message = self::INSERT_COIN_MSG;
 
         if ($this->paymentRequired > 0) {
-            $message = "PRICE $ " . number_format($this->paymentRequired / 100, 2);
+            $message = "PRICE " . $this->formatCurrency($this->paymentRequired);
         }
 
         if ($this->valueInserted > 0) {
-            $message =  "$ " . number_format($this->valueInserted / 100, 2);
+            $message =  $this->formatCurrency($this->valueInserted);
         }
 
         return $message;
@@ -92,5 +92,14 @@ class VendingMachine
             },
             $products
         );
+    }
+
+    /**
+     * @param int $value
+     * @return string
+     */
+    private function formatCurrency(int $value): string
+    {
+        return '$ ' . number_format($value / 100, 2);
     }
 }
