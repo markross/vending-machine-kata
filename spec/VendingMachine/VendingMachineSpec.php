@@ -89,6 +89,14 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getPaymentRequired()->shouldBe(65);
     }
 
+    function it_displays_the_payment_required_for_selected_product(Inventory $inventory)
+    {
+        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->getPrice('candy')->willReturn(65);
+        $this->selectProduct('candy');
+        $this->getMessage()->shouldBe("PRICE $ 0.65");
+    }
+    
     function it_shows_the_current_amount_inserted(Coin $coin, CoinDetectorInterface $coinDetector)
     {
         $coin->getWeight()->willReturn(CoinDetector::QUARTER_VALUE);

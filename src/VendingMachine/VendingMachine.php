@@ -44,6 +44,10 @@ class VendingMachine
     {
         $message = self::INSERT_COIN_MSG;
 
+        if ($this->paymentRequired > 0) {
+            $message = "PRICE $ " . number_format($this->paymentRequired / 100, 2);
+        }
+
         if ($this->valueInserted > 0) {
             $message =  "$ " . number_format($this->valueInserted / 100, 2);
         }
