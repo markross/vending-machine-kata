@@ -6,6 +6,7 @@ class VendingMachine
 {
     const INSERT_COIN_MSG = "INSERT COIN";
     const DISPENSED_MSG = 'THANK YOU';
+    const OUT_OF_STOCK_MSG = 'OUT OF STOCK';
 
     private int $valueInserted = 0;
     /**
@@ -20,6 +21,8 @@ class VendingMachine
      * @var Inventory
      */
     private Inventory $inventory;
+
+    private string $message = '';
 
     public function __construct(CoinDetectorInterface $coinCounter, Inventory $inventory)
     {
@@ -58,12 +61,21 @@ class VendingMachine
             $message = self::DISPENSED_MSG;
         }
 
+        if ($this->message !== '') {
+            $message = $this->message;
+            $this->message = '';
+        }
+
         return $message;
     }
 
     public function selectProduct($product) : void
     {
-        $this->paymentRequired = $this->inventory->getPrice($product);
+        if ($this->inventory->checkStock($product) === 0) {
+            $this->message = self::OUT_OF_STOCK_MSG;
+        } else {
+            $this->paymentRequired = $this->inventory->getPrice($product);
+        }
     }
 
     public function getPaymentRequired() : int

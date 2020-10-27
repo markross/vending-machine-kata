@@ -70,6 +70,7 @@ class VendingMachineSpec extends ObjectBehavior
     {
         $inventory->addProduct(Argument::any())->shouldBeCalled();
         $inventory->getPrice('cola')->willReturn(100);
+        $inventory->checkStock('cola')->shouldBeCalled();
         $this->selectProduct('cola');
         $this->getPaymentRequired()->shouldBe(100);
     }
@@ -77,6 +78,7 @@ class VendingMachineSpec extends ObjectBehavior
     function it_can_select_the_chips_product(Inventory $inventory)
     {
         $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->checkStock('chips')->shouldBeCalled();
         $inventory->getPrice('chips')->willReturn(50);
         $this->selectProduct('chips');
         $this->getPaymentRequired()->shouldBe(50);
@@ -85,6 +87,7 @@ class VendingMachineSpec extends ObjectBehavior
     function it_can_select_the_candy_product(Inventory $inventory)
     {
         $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->checkStock('candy')->shouldBeCalled();
         $inventory->getPrice('candy')->willReturn(65);
         $this->selectProduct('candy');
         $this->getPaymentRequired()->shouldBe(65);
@@ -93,6 +96,7 @@ class VendingMachineSpec extends ObjectBehavior
     function it_displays_the_payment_required_for_selected_product(Inventory $inventory)
     {
         $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->checkStock('candy')->shouldBeCalled();
         $inventory->getPrice('candy')->willReturn(65);
         $this->selectProduct('candy');
         $this->getMessage()->shouldBe("PRICE $ 0.65");
@@ -120,6 +124,7 @@ class VendingMachineSpec extends ObjectBehavior
     )
     {
         $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->checkStock('cola')->shouldBeCalled();
         $coinDetector->getValue($coin)->willReturn(CoinDetector::QUARTER_VALUE);
         $inventory->getPrice('cola')->willReturn(50);
         $this->selectProduct('cola');
@@ -136,5 +141,18 @@ class VendingMachineSpec extends ObjectBehavior
         $this->returnCoins();
         $this->getMessage()->shouldBe(VendingMachine::INSERT_COIN_MSG);
         $this->getTotalPaid()->shouldBe(0);
+    }
+
+    function it_displays_out_stock_message_if_product_out_of_stock(Coin $coin, CoinDetectorInterface $coinDetector, Inventory $inventory)
+    {
+        $coinDetector->getValue($coin)->willReturn(25);
+        $inventory->checkStock('cola')->willReturn(0);
+        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->getPrice('cola')->willReturn(50);
+        $this->receiveCoin($coin);
+        $this->receiveCoin($coin);
+        $this->selectProduct('cola');
+        $this->getMessage()->shouldBe(VendingMachine::OUT_OF_STOCK_MSG);
+        $this->getMessage()->shouldBe('$ 0.50');
     }
 }
