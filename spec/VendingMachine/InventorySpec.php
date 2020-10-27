@@ -12,6 +12,7 @@ class InventorySpec extends ObjectBehavior
         $this->addProduct([
            "sku"    => 'cola',
            "price"  => 100,
+           "stock"  => 100,
         ]);
     }
 
@@ -20,8 +21,20 @@ class InventorySpec extends ObjectBehavior
         $this->addProduct([
             "sku"    => 'cola',
             "price"  => 100,
+            "stock"  => 100,
         ]);
 
         $this->getPrice('cola')->shouldBe(100);
+    }
+
+    function it_can_keep_track_of_the_stock()
+    {
+        $this->addProduct([
+            "sku"    => 'cola',
+            "price"  => 100,
+            "stock"  => 3,
+        ]);
+
+        $this->checkStock('cola')->shouldBe(3);
     }
 }

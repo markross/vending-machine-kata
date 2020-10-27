@@ -9,12 +9,21 @@ class Inventory
 
     public function addProduct(array $productDetails)
     {
-        $this->products[$productDetails["sku"]] = $productDetails["price"];
+        $this->products[$productDetails["sku"]] =
+            [
+                "price" => $productDetails["price"],
+                "stock" => $productDetails["stock"],
+            ];
     }
 
     public function getPrice($sku)
     {
-        return $this->products[$sku];
+        return $this->products[$sku]["price"];
+    }
+
+    public function checkStock($sku)
+    {
+        return $this->products[$sku]["stock"];
     }
 
 }
