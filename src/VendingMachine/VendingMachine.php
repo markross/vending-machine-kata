@@ -46,7 +46,7 @@ class VendingMachine implements StoreInterface
         $this->initialiseInventory($inventory);
     }
 
-    public function receiveCoin(Coin $coin) : bool
+    public function receiveCoin(Coin $coin) : void
     {
         $value = $this->coinDetector->getValue($coin);
         $this->valueInserted += $value;
@@ -55,8 +55,6 @@ class VendingMachine implements StoreInterface
         if ($this->productCanBeDispensed()) {
             $this->dispenseProduct();
         }
-
-        return true;
     }
 
     public function getTotalPaid() : int

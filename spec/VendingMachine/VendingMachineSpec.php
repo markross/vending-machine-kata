@@ -22,12 +22,6 @@ class VendingMachineSpec extends ObjectBehavior
         $this->beConstructedWith($coinDetector, $inventory, $coinStore, $display);
     }
 
-    function it_accepts_coins(Coin $coin, CoinDetectorInterface $coinDetector)
-    {
-        $coinDetector->getValue($coin)->shouldBeCalled();
-        $this->receiveCoin($coin)->shouldBe(true);
-    }
-
     function it_detects_a_nickle(Coin $coin, CoinDetectorInterface $coinDetector)
     {
         $coinDetector->getValue($coin)->willReturn(CoinDetector::NICKLE_VALUE);
