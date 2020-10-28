@@ -95,6 +95,7 @@ class VendingMachine implements PaymentRecord
     private function dispenseProduct()
     {
         $this->change = $this->valueInserted - $this->paymentRequired;
+        $this->returnChange();
         $this->valueInserted = 0;
         $this->paymentRequired = 0;
         $this->display->showDispensed();
