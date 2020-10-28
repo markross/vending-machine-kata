@@ -7,6 +7,7 @@ use Prophecy\Argument;
 use VendingMachine\Coin;
 use VendingMachine\CoinDetector;
 use VendingMachine\CoinDetectorInterface;
+use VendingMachine\CoinStoreInterface;
 use VendingMachine\Inventory;
 use VendingMachine\VendingMachine;
 
@@ -14,8 +15,10 @@ class VendingMachineSpec extends ObjectBehavior
 {
     const INSERT_COIN_MSG = "INSERT COIN";
 
-    function let(CoinDetectorInterface $coinDetector, Inventory $inventory) {
-        $this->beConstructedWith($coinDetector, $inventory);
+    function let(CoinDetectorInterface $coinDetector, Inventory $inventory, CoinStoreInterface $coinStore)
+    {
+        $coinStore->hasChange()->willReturn(true);
+        $this->beConstructedWith($coinDetector, $inventory, $coinStore);
     }
 
     function it_accepts_coins(Coin $coin, CoinDetectorInterface $coinDetector)
@@ -177,6 +180,12 @@ class VendingMachineSpec extends ObjectBehavior
         $this->receiveCoin($coin);
         $this->selectProduct('cola');
         $this->returnChange()->shouldBe(10);
+    }
+
+    function it_displays_exact_change_only_message_when_change_not_available(CoinStoreInterface $coinStore)
+    {
+        $coinStore->hasChange()->willReturn(false);
+        $this->getMessage()->shouldBe('EXACT CHANGE ONLY');
     }
 
 }

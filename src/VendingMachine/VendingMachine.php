@@ -7,6 +7,7 @@ class VendingMachine
     const INSERT_COIN_MSG = "INSERT COIN";
     const DISPENSED_MSG = 'THANK YOU';
     const OUT_OF_STOCK_MSG = 'OUT OF STOCK';
+    const EXACT_CHANGE_MSG = 'EXACT CHANGE ONLY';
 
     private int $valueInserted = 0;
     /**
@@ -24,11 +25,16 @@ class VendingMachine
 
     private string $message = '';
     private int $change;
+    /**
+     * @var CoinStoreInterface
+     */
+    private CoinStoreInterface $coinStore;
 
-    public function __construct(CoinDetectorInterface $coinCounter, Inventory $inventory)
+    public function __construct(CoinDetectorInterface $coinCounter, Inventory $inventory, CoinStoreInterface $coinStore)
     {
         $this->coinDetector = $coinCounter;
         $this->inventory = $inventory;
+        $this->coinStore = $coinStore;
 
         $this->initialiseInventory($inventory);
     }
@@ -52,7 +58,7 @@ class VendingMachine
 
     public function getMessage()
     {
-        $message = self::INSERT_COIN_MSG;
+        $message = $this->coinStore->hasChange() ? self::INSERT_COIN_MSG : self::EXACT_CHANGE_MSG;
 
         if ($this->paymentRequired > 0) {
             $message = "PRICE " . $this->formatCurrency($this->paymentRequired);
