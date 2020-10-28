@@ -4,10 +4,6 @@ namespace VendingMachine;
 
 class VendingMachine
 {
-    const INSERT_COIN_MSG = "INSERT COIN";
-    const DISPENSED_MSG = 'THANK YOU';
-    const OUT_OF_STOCK_MSG = 'OUT OF STOCK';
-    const EXACT_CHANGE_MSG = 'EXACT CHANGE ONLY';
 
     private int $valueInserted = 0;
     /**
@@ -22,19 +18,30 @@ class VendingMachine
      * @var Inventory
      */
     private Inventory $inventory;
-
-    private string $message = '';
+    /**
+     * @var int
+     */
     private int $change;
     /**
      * @var CoinStoreInterface
      */
     private CoinStoreInterface $coinStore;
+    /**
+     * @var DisplayInterface
+     */
+    private DisplayInterface $display;
 
-    public function __construct(CoinDetectorInterface $coinCounter, Inventory $inventory, CoinStoreInterface $coinStore)
+    public function __construct(
+        CoinDetectorInterface $coinCounter,
+        Inventory $inventory,
+        CoinStoreInterface $coinStore,
+        DisplayInterface $display
+    )
     {
         $this->coinDetector = $coinCounter;
         $this->inventory = $inventory;
         $this->coinStore = $coinStore;
+        $this->display = $display;
 
         $this->initialiseInventory($inventory);
     }
@@ -43,6 +50,7 @@ class VendingMachine
     {
         $value = $this->coinDetector->getValue($coin);
         $this->valueInserted += $value;
+        $this->display->update($this);
 
         if ($this->productCanBeDispensed()) {
             $this->dispenseProduct();
@@ -56,41 +64,42 @@ class VendingMachine
         return $this->valueInserted;
     }
 
-    public function getMessage()
-    {
-        $message = $this->coinStore->hasChange() ? self::INSERT_COIN_MSG : self::EXACT_CHANGE_MSG;
-
-        if ($this->paymentRequired > 0) {
-            $message = "PRICE " . $this->formatCurrency($this->paymentRequired);
-        }
-
-        if ($this->valueInserted > 0 && $this->valueInserted > $this->paymentRequired) {
-            $message =  $this->formatCurrency($this->valueInserted);
-        }
-
-        if ($this->message !== '') {
-            $message = $this->message;
-            $this->message = '';
-        }
-
-        return $message;
-    }
-
     public function selectProduct($product) : void
     {
         if ($this->inventory->checkStock($product) === 0) {
-            $this->message = self::OUT_OF_STOCK_MSG;
+            $this->display->showOutOfStock();
         } else {
             $this->paymentRequired = $this->inventory->getPrice($product);
             if ($this->productCanBeDispensed()) {
                 $this->dispenseProduct();
             }
         }
+        $this->display->update($this);
     }
 
     public function getPaymentRequired() : int
     {
         return $this->paymentRequired;
+    }
+
+    public function returnCoins()
+    {
+        $this->valueInserted = 0;
+        $this->paymentRequired = 0;
+    }
+
+    public function returnChange() : int
+    {   $changeReturned = $this->change;
+        $this->change = 0;
+        return $changeReturned;
+    }
+
+    private function dispenseProduct()
+    {
+        $this->change = $this->valueInserted - $this->paymentRequired;
+        $this->valueInserted = 0;
+        $this->paymentRequired = 0;
+        $this->display->showDispensed();
     }
 
     /**
@@ -122,41 +131,14 @@ class VendingMachine
         );
     }
 
-    public function returnCoins()
-    {
-        $this->valueInserted = 0;
-        $this->paymentRequired = 0;
-    }
-
-    public function returnChange() : int
-    {   $changeReturned = $this->change;
-        $this->change = 0;
-        return $changeReturned;
-    }
-
-    /**
-     * @param int $value
-     * @return string
-     */
-    private function formatCurrency(int $value): string
-    {
-        return '$ ' . number_format($value / 100, 2);
-    }
-
-    private function dispenseProduct()
-    {
-        $this->message = self::DISPENSED_MSG;
-        $this->change = $this->valueInserted - $this->paymentRequired;
-        $this->valueInserted = 0;
-        $this->paymentRequired = 0;
-    }
-
     /**
      * @return bool
      */
     private function productCanBeDispensed(): bool
     {
-        return $this->valueInserted > 0 && $this->valueInserted >= $this->paymentRequired && $this->paymentRequired > 0;
+        return $this->valueInserted > 0
+            && $this->valueInserted >= $this->paymentRequired
+            && $this->paymentRequired > 0;
     }
 
 

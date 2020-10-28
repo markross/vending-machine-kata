@@ -8,6 +8,7 @@ use VendingMachine\Coin;
 use VendingMachine\CoinDetector;
 use VendingMachine\CoinDetectorInterface;
 use VendingMachine\CoinStoreInterface;
+use VendingMachine\DisplayInterface;
 use VendingMachine\Inventory;
 use VendingMachine\VendingMachine;
 
@@ -15,10 +16,10 @@ class VendingMachineSpec extends ObjectBehavior
 {
     const INSERT_COIN_MSG = "INSERT COIN";
 
-    function let(CoinDetectorInterface $coinDetector, Inventory $inventory, CoinStoreInterface $coinStore)
+    function let(CoinDetectorInterface $coinDetector, Inventory $inventory, CoinStoreInterface $coinStore, DisplayInterface $display)
     {
         $coinStore->hasChange()->willReturn(true);
-        $this->beConstructedWith($coinDetector, $inventory, $coinStore);
+        $this->beConstructedWith($coinDetector, $inventory, $coinStore, $display);
     }
 
     function it_accepts_coins(Coin $coin, CoinDetectorInterface $coinDetector)
@@ -64,11 +65,6 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getTotalPaid()->shouldBe(CoinDetector::DIME_VALUE + CoinDetector::QUARTER_VALUE);
     }
 
-    function it_displays_insert_coin_message_when_no_coins_inserted()
-    {
-        $this->getMessage()->shouldBe(self::INSERT_COIN_MSG);
-    }
-
     function it_sets_the_payment_required_when_selecting_a_product(Inventory $inventory)
     {
         $inventory->addProduct(Argument::any())->shouldBeCalled();
@@ -96,77 +92,75 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getPaymentRequired()->shouldBe(65);
     }
 
-    function it_displays_the_payment_required_for_selected_product(Inventory $inventory)
+    function it_displays_the_payment_required_for_selected_product(Inventory $inventory, DisplayInterface $display)
     {
         $inventory->addProduct(Argument::any())->shouldBeCalled();
         $inventory->checkStock('candy')->shouldBeCalled();
         $inventory->getPrice('candy')->willReturn(65);
+        $display->update(Argument::type(VendingMachine::class))->shouldBeCalled();
         $this->selectProduct('candy');
-        $this->getMessage()->shouldBe("PRICE $ 0.65");
     }
 
-    function it_shows_the_current_amount_inserted(Coin $coin, CoinDetectorInterface $coinDetector)
+    function it_shows_the_current_amount_inserted(Coin $coin, CoinDetectorInterface $coinDetector, DisplayInterface $display)
     {
         $coinDetector->getValue($coin)->willReturn(25);
+        $display->update(Argument::type(VendingMachine::class))->shouldBeCalled();
         $this->receiveCoin($coin);
-        $this->getMessage()->shouldBeLike('$ 0.25');
     }
 
-    function it_shows_the_current_amount_when_multiple_coins_inserted(Coin $coin, CoinDetectorInterface $coinDetector)
+    function it_shows_the_current_amount_when_multiple_coins_inserted(Coin $coin, CoinDetectorInterface $coinDetector, DisplayInterface $display)
     {
         $coinDetector->getValue($coin)->willReturn(25);
+        $display->update(Argument::type(VendingMachine::class))->shouldBeCalledTimes(2);
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
-        $this->getMessage()->shouldBeLike('$ 0.50');
     }
 
     function it_dispenses_the_product_when_the_right_money_is_inserted(
         Coin $coin, CoinDetectorInterface
         $coinDetector,
-        Inventory $inventory
+        Inventory $inventory,
+        DisplayInterface $display
     )
     {
         $inventory->addProduct(Argument::any())->shouldBeCalled();
         $inventory->checkStock('cola')->shouldBeCalled();
         $coinDetector->getValue($coin)->willReturn(CoinDetector::QUARTER_VALUE);
         $inventory->getPrice('cola')->willReturn(50);
+        $display->update(Argument::type(VendingMachine::class))->shouldBeCalled();
+        $display->showDispensed()->shouldBeCalled();
         $this->selectProduct('cola');
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
-        $this->getMessage()->shouldBe('THANK YOU');
     }
 
-    function it_resets_when_returning_coins(Coin $coin, CoinDetectorInterface $coinDetector)
+    function it_resets_when_returning_coins(Coin $coin, CoinDetectorInterface $coinDetector, DisplayInterface $display)
     {
         $coinDetector->getValue($coin)->willReturn(25);
+        $display->update(Argument::type(VendingMachine::class))->shouldBeCalled();
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
         $this->returnCoins();
-        $this->getMessage()->shouldBe(VendingMachine::INSERT_COIN_MSG);
         $this->getTotalPaid()->shouldBe(0);
     }
 
-    function it_displays_out_stock_message_if_product_out_of_stock(Coin $coin, CoinDetectorInterface $coinDetector, Inventory $inventory)
+    function it_displays_out_stock_message_if_product_out_of_stock(
+        Coin $coin,
+        CoinDetectorInterface $coinDetector,
+        Inventory $inventory,
+        DisplayInterface $display
+    )
     {
         $coinDetector->getValue($coin)->willReturn(25);
         $inventory->checkStock('cola')->willReturn(0);
-        $inventory->addProduct(Argument::any())->shouldBeCalled();
-        $inventory->getPrice('cola')->willReturn(50);
-        $this->receiveCoin($coin);
-        $this->receiveCoin($coin);
-        $this->selectProduct('cola');
-        $this->getMessage()->shouldBe(VendingMachine::OUT_OF_STOCK_MSG);
-        $this->getMessage()->shouldBe('$ 0.50');
-    }
+        $display->update(Argument::type(VendingMachine::class))->shouldBeCalled();
+        $display->showOutOfStock()->shouldBeCalled();
 
-    function it_displays_insert_coin_message_after_selecting_out_of_stock_product(CoinDetectorInterface $coinDetector, Inventory $inventory)
-    {
-        $inventory->checkStock('cola')->willReturn(0);
         $inventory->addProduct(Argument::any())->shouldBeCalled();
         $inventory->getPrice('cola')->willReturn(50);
+        $this->receiveCoin($coin);
+        $this->receiveCoin($coin);
         $this->selectProduct('cola');
-        $this->getMessage()->shouldBe(VendingMachine::OUT_OF_STOCK_MSG);
-        $this->getMessage()->shouldBe(VendingMachine::INSERT_COIN_MSG);
     }
 
     function it_dispenses_the_correct_change(Coin $coin, CoinDetectorInterface $coinDetector, Inventory $inventory)
@@ -180,12 +174,6 @@ class VendingMachineSpec extends ObjectBehavior
         $this->receiveCoin($coin);
         $this->selectProduct('cola');
         $this->returnChange()->shouldBe(10);
-    }
-
-    function it_displays_exact_change_only_message_when_change_not_available(CoinStoreInterface $coinStore)
-    {
-        $coinStore->hasChange()->willReturn(false);
-        $this->getMessage()->shouldBe('EXACT CHANGE ONLY');
     }
 
 }
