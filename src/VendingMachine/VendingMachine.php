@@ -2,7 +2,7 @@
 
 namespace VendingMachine;
 
-class VendingMachine
+class VendingMachine implements StoreInterface
 {
 
     private int $valueInserted = 0;
