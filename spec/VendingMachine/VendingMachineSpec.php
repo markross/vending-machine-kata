@@ -14,7 +14,6 @@ use VendingMachine\VendingMachine;
 
 class VendingMachineSpec extends ObjectBehavior
 {
-    const INSERT_COIN_MSG = "INSERT COIN";
 
     function let(CoinDetectorInterface $coinDetector, Inventory $inventory, CoinStoreInterface $coinStore, DisplayInterface $display)
     {
