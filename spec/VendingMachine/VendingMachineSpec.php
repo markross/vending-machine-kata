@@ -61,7 +61,7 @@ class VendingMachineSpec extends ObjectBehavior
 
     function it_sets_the_payment_required_when_selecting_a_product(Inventory $inventory)
     {
-        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->addProduct(Argument::type('array'))->shouldBeCalled();
         $inventory->getPrice('cola')->willReturn(100);
         $inventory->checkStock('cola')->shouldBeCalled();
         $this->selectProduct('cola');
@@ -70,7 +70,7 @@ class VendingMachineSpec extends ObjectBehavior
 
     function it_can_select_the_chips_product(Inventory $inventory)
     {
-        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->addProduct(Argument::type('array'))->shouldBeCalled();
         $inventory->checkStock('chips')->shouldBeCalled();
         $inventory->getPrice('chips')->willReturn(50);
         $this->selectProduct('chips');
@@ -79,7 +79,7 @@ class VendingMachineSpec extends ObjectBehavior
 
     function it_can_select_the_candy_product(Inventory $inventory)
     {
-        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->addProduct(Argument::type('array'))->shouldBeCalled();
         $inventory->checkStock('candy')->shouldBeCalled();
         $inventory->getPrice('candy')->willReturn(65);
         $this->selectProduct('candy');
@@ -88,7 +88,7 @@ class VendingMachineSpec extends ObjectBehavior
 
     function it_displays_the_payment_required_for_selected_product(Inventory $inventory, DisplayInterface $display)
     {
-        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->addProduct(Argument::type('array'))->shouldBeCalled();
         $inventory->checkStock('candy')->shouldBeCalled();
         $inventory->getPrice('candy')->willReturn(65);
         $display->update(Argument::type(VendingMachine::class))->shouldBeCalled();
@@ -117,7 +117,7 @@ class VendingMachineSpec extends ObjectBehavior
         DisplayInterface $display
     )
     {
-        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->addProduct(Argument::type('array'))->shouldBeCalled();
         $inventory->checkStock('cola')->shouldBeCalled();
         $coinDetector->getValue($coin)->willReturn(CoinDetector::QUARTER_VALUE);
         $inventory->getPrice('cola')->willReturn(50);
@@ -150,7 +150,7 @@ class VendingMachineSpec extends ObjectBehavior
         $display->update(Argument::type(VendingMachine::class))->shouldBeCalled();
         $display->showOutOfStock()->shouldBeCalled();
 
-        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->addProduct(Argument::type('array'))->shouldBeCalled();
         $inventory->getPrice('cola')->willReturn(50);
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
@@ -161,7 +161,7 @@ class VendingMachineSpec extends ObjectBehavior
     {
         $coinDetector->getValue($coin)->willReturn(25);
         $inventory->checkStock('cola')->shouldBeCalled();
-        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->addProduct(Argument::type('array'))->shouldBeCalled();
         $inventory->getPrice('cola')->willReturn(65);
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
