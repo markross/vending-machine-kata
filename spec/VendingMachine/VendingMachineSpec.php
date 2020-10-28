@@ -166,4 +166,17 @@ class VendingMachineSpec extends ObjectBehavior
         $this->getMessage()->shouldBe(VendingMachine::INSERT_COIN_MSG);
     }
 
+    function it_dispenses_the_correct_change(Coin $coin, CoinDetectorInterface $coinDetector, Inventory $inventory)
+    {
+        $coinDetector->getValue($coin)->willReturn(25);
+        $inventory->checkStock('cola')->shouldBeCalled();
+        $inventory->addProduct(Argument::any())->shouldBeCalled();
+        $inventory->getPrice('cola')->willReturn(65);
+        $this->receiveCoin($coin);
+        $this->receiveCoin($coin);
+        $this->receiveCoin($coin);
+        $this->selectProduct('cola');
+        $this->returnChange()->shouldBe(10);
+    }
+
 }

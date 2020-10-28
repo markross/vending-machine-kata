@@ -23,6 +23,7 @@ class VendingMachine
     private Inventory $inventory;
 
     private string $message = '';
+    private int $change;
 
     public function __construct(CoinDetectorInterface $coinCounter, Inventory $inventory)
     {
@@ -37,7 +38,7 @@ class VendingMachine
         $value = $this->coinDetector->getValue($coin);
         $this->valueInserted += $value;
 
-        if ($this->valueInserted > 0 && $this->valueInserted >= $this->paymentRequired && $this->paymentRequired > 0) {
+        if ($this->productCanBeDispensed()) {
             $this->dispenseProduct();
         }
 
@@ -75,6 +76,9 @@ class VendingMachine
             $this->message = self::OUT_OF_STOCK_MSG;
         } else {
             $this->paymentRequired = $this->inventory->getPrice($product);
+            if ($this->productCanBeDispensed()) {
+                $this->dispenseProduct();
+            }
         }
     }
 
@@ -118,9 +122,10 @@ class VendingMachine
         $this->paymentRequired = 0;
     }
 
-    public function getChange()
-    {
-
+    public function returnChange() : int
+    {   $changeReturned = $this->change;
+        $this->change = 0;
+        return $changeReturned;
     }
 
     /**
@@ -135,8 +140,17 @@ class VendingMachine
     private function dispenseProduct()
     {
         $this->message = self::DISPENSED_MSG;
+        $this->change = $this->valueInserted - $this->paymentRequired;
         $this->valueInserted = 0;
         $this->paymentRequired = 0;
+    }
+
+    /**
+     * @return bool
+     */
+    private function productCanBeDispensed(): bool
+    {
+        return $this->valueInserted > 0 && $this->valueInserted >= $this->paymentRequired && $this->paymentRequired > 0;
     }
 
 
