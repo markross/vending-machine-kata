@@ -82,21 +82,25 @@ class VendingMachine implements PaymentRecord
 
     public function returnCoins()
     {
+        $this->coinStore->returnCoins($this->valueInserted);
         $this->valueInserted = 0;
         $this->paymentRequired = 0;
         $this->display->update($this);
     }
 
-    public function returnChange() : int
-    {   $changeReturned = $this->change;
-        $this->change = 0;
-        return $changeReturned;
+    public function returnChange() : void
+    {
+        $this->coinStore->returnCoins($this->change);
     }
 
     private function dispenseProduct()
     {
         $this->change = $this->valueInserted - $this->paymentRequired;
-        $this->returnChange();
+
+        if ($this->change > 0) {
+            $this->returnChange();
+        }
+
         $this->valueInserted = 0;
         $this->paymentRequired = 0;
         $this->display->showDispensed();

@@ -127,10 +127,16 @@ class VendingMachineSpec extends ObjectBehavior
         $this->receiveCoin($coin);
     }
 
-    function it_resets_when_returning_coins(Coin $coin, CoinDetectorInterface $coinDetector, DisplayInterface $display)
+    function it_resets_when_returning_coins(
+        Coin $coin,
+        CoinDetectorInterface $coinDetector,
+        DisplayInterface $display,
+        CoinStoreInterface $coinStore
+    )
     {
         $coinDetector->getValue($coin)->willReturn(25);
         $display->update(Argument::type(VendingMachine::class))->shouldBeCalled();
+        $coinStore->returnCoins(50)->shouldBeCalled();
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
         $this->returnCoins();
@@ -156,7 +162,7 @@ class VendingMachineSpec extends ObjectBehavior
         $this->selectProduct('cola');
     }
 
-    function it_dispenses_the_correct_change(Coin $coin, CoinDetectorInterface $coinDetector, Inventory $inventory)
+    function it_dispenses_the_correct_change(Coin $coin, CoinDetectorInterface $coinDetector, Inventory $inventory, CoinStoreInterface $coinStore)
     {
         $coinDetector->getValue($coin)->willReturn(25);
         $inventory->checkStock('cola')->shouldBeCalled();
@@ -165,8 +171,10 @@ class VendingMachineSpec extends ObjectBehavior
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
         $this->receiveCoin($coin);
+
+        $coinStore->returnCoins(10)->shouldBeCalled();
+
         $this->selectProduct('cola');
-        $this->returnChange()->shouldBe(10);
     }
 
 }
