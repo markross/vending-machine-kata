@@ -4,7 +4,7 @@
 namespace VendingMachine;
 
 
-interface StoreInterface
+interface PaymentRecord
 {
     public function getPaymentRequired(): int;
     public function getTotalPaid(): int;

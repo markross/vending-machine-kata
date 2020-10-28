@@ -25,7 +25,7 @@ class Display implements DisplayInterface
         }
     }
 
-    public function update(StoreInterface $vendingMachine): void
+    public function update(PaymentRecord $vendingMachine): void
     {
         if ($vendingMachine->getPaymentRequired() > 0) {
             $this->message = "PRICE " . $this->formatCurrency($vendingMachine->getPaymentRequired());

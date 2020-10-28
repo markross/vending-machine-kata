@@ -3,11 +3,9 @@
 namespace spec\VendingMachine;
 
 use PhpSpec\ObjectBehavior;
-use VendingMachine\Coin;
 use VendingMachine\CoinStoreInterface;
 use VendingMachine\Display;
-use VendingMachine\StoreInterface;
-use VendingMachine\VendingMachine;
+use VendingMachine\PaymentRecord;
 
 class DisplaySpec extends ObjectBehavior
 {
@@ -17,7 +15,7 @@ class DisplaySpec extends ObjectBehavior
         $coinStore->hasChange()->willReturn(true);
     }
 
-    function it_displays_the_price(StoreInterface $store)
+    function it_displays_the_price(PaymentRecord $store)
     {
         $store->getPaymentRequired()->willReturn(50);
         $store->getTotalPaid()->willReturn(0);
@@ -25,7 +23,7 @@ class DisplaySpec extends ObjectBehavior
         $this->getMessage()->shouldBe("PRICE $ 0.50");
     }
 
-    function it_displays_the_amount_inserted(StoreInterface $store)
+    function it_displays_the_amount_inserted(PaymentRecord $store)
     {
         $store->getTotalPaid()->willReturn(25);
         $store->getPaymentRequired()->willReturn(0);
@@ -39,14 +37,14 @@ class DisplaySpec extends ObjectBehavior
         $this->getMessage()->shouldBe(Display::OUT_OF_STOCK_MSG);
     }
 
-    function it_will_show_insert_coin_following_out_of_stock_message(StoreInterface $store, CoinStoreInterface $coinStore)
+    function it_will_show_insert_coin_following_out_of_stock_message(PaymentRecord $store, CoinStoreInterface $coinStore)
     {
         $this->showOutOfStock();
         $this->getMessage();
         $this->getMessage()->shouldBe(Display::INSERT_COIN_MSG);
     }
 
-    function it_will_show_value_inserted_after_out_of_stock_message(StoreInterface $store)
+    function it_will_show_value_inserted_after_out_of_stock_message(PaymentRecord $store)
     {
         $store->getTotalPaid()->willReturn(25);
         $store->getPaymentRequired()->willReturn(0);
@@ -62,7 +60,7 @@ class DisplaySpec extends ObjectBehavior
         $this->getMessage()->shouldBe(Display::DISPENSED_MSG);
     }
 
-    function it_will_display_insert_coin_message_after_dispensing(StoreInterface $store)
+    function it_will_display_insert_coin_message_after_dispensing(PaymentRecord $store)
     {
         $this->showDispensed();
         $store->getTotalPaid()->willReturn(0);

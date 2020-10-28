@@ -2,7 +2,7 @@
 
 namespace VendingMachine;
 
-class VendingMachine implements StoreInterface
+class VendingMachine implements PaymentRecord
 {
 
     private int $valueInserted = 0;
@@ -23,7 +23,7 @@ class VendingMachine implements StoreInterface
      */
     private int $change;
     /**
-     * @var CoinStoreInterface
+     * @var CoinStoreInterfacea
      */
     private CoinStoreInterface $coinStore;
     /**
