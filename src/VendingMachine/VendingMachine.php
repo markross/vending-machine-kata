@@ -23,7 +23,7 @@ class VendingMachine implements PaymentRecord
      */
     private int $change;
     /**
-     * @var CoinStoreInterfacea
+     * @var CoinStoreInterface
      */
     private CoinStoreInterface $coinStore;
     /**
