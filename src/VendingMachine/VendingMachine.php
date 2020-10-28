@@ -84,6 +84,7 @@ class VendingMachine implements PaymentRecord
     {
         $this->valueInserted = 0;
         $this->paymentRequired = 0;
+        $this->display->update($this);
     }
 
     public function returnChange() : int
